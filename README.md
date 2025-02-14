@@ -144,6 +144,8 @@ The API follows structured error handling, returning responses in the format:
   "code": "Error code here"
 }
 ```
+## Postman Published Link
+https://documenter.getpostman.com/view/33130441/2sAYXCmeig
 
 ## Conclusion
 This API allows for efficient course management with role-based access control. More features will be added to it such as progress tracking

@@ -51,7 +51,7 @@ const deleteCourse = async (req, res) => {
 
     const updatedCourse = await Course.findById(courseId).deleteOne();
 
-    res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Course deleted successfully', data: { updatedCourse } });
+    res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Course deleted successfully'});
 }
 
 
