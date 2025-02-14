@@ -80,17 +80,25 @@ const enrollStudent = async (req, res) => {
 
 
 const updateStudent = async (req, res) => {
-    const { studentId } = req.body;
     const { course_id } = req.params;
     const { role } = req.user;
+    const { status, studentId } = req.body;
 
     if (role !== 'admin') {
         throw new UnauthenticatedError('Not an admin.')
     }
 
-    const updatedStudent = await Course.findByIdAndUpdate({ _id: course_id }, req.body);
+    const course = await Course.findOne({ _id: course_id });
 
-    res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Student updated', data: { updatedStudent } });
+    if (!course.students.includes(studentId)) {
+        throw new BadRequestError('Student is not enrolled to this course.')
+    }
+
+    const updatedEnrollment = await Enrollment.findOne({ course: course_id, student: studentId })
+    updatedEnrollment.status = status
+    await updatedEnrollment.save();
+
+    res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Student enrollment updated', data: { updatedEnrollment } });
 }
 
 const removeStudent = async (req, res) => {
@@ -107,9 +115,16 @@ const removeStudent = async (req, res) => {
     if (!isExistingStudent) {
         throw new BadRequestError('Student is not enrolled to this course.')
     }
+
+    // Finds the enrollment with the course_id and student_id
+    const enrollment = await Enrollment.findOne({ course: course_id, student: student_id });
+
+    // Removes the student from the course
     const studentIndex = course.students.indexOf(student_id)
     course.students.splice(studentIndex, 1);
+    enrollment.status = 'dropped';
     await course.save()
+    await enrollment.save();
 
     res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Student removed from course successfully' });
 }
