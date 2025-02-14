@@ -9,6 +9,8 @@ const connectDB = require('./db/connect')
 
 const { StatusCodes } = require('http-status-codes');
 
+const cors = require('cors')
+
 // routes
 const authRouter = require('./routes/auth');
 const courseRouter = require('./routes/courses');
@@ -25,6 +27,7 @@ app.get('/api/v1/healthcheck', (req, res) => {
 
 // middlewares
 app.use(express.json());
+app.use(cors());
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/courses', authMiddleware, courseRouter);
 app.use('/api/v1/students', authMiddleware, studentRouter);
