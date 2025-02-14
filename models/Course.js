@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const courseSchema = new mongoose.Schema({
     instructor: {
-        type: mongoose.SchemaTypes.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
     title: {
@@ -21,13 +21,19 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    students: [{
-        type: mongoose.SchemaType.ObjectId,
-        ref: 'User'
-    }]
+    students: [
+        {
+            type: mongoose.SchemaTypes.ObjectId,
+            ref: 'User'
+        }
+    ]
 }, { timestamps: true })
 
+// courseSchema.post('save', function () {
+
+// });
 
 
 
-module.exports = mongoose.model('Course', courseSchema);
+
+module.exports = mongoose.model('Course', courseSchema);    
