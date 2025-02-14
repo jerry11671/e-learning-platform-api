@@ -21,7 +21,7 @@ const errorHandlerMiddleware = require('./middlewares/error-handler')
 const notFoundMiddleware = require('./middlewares/not-found');
 const authMiddleware = require('./middlewares/auth')
 
-app.get('/api/v1/healthcheck', (req, res) => {
+app.get('/healthcheck', (req, res) => {
     res.status(StatusCodes.OK).json({ status: 'active' });
 })
 
