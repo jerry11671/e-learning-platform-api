@@ -1,5 +1,6 @@
 const { UnauthenticatedError, BadRequestError } = require('../errors');
 const Course = require('../models/Course');
+const Enrollment = require('../models/Enrollment');
 const { StatusCodes } = require('http-status-codes');
 
 

@@ -1,5 +1,6 @@
 const { UnauthenticatedError, BadRequestError } = require('../errors');
 const Course = require('../models/Course');
+const Enrollment = require('../models/Enrollment');
 const { StatusCodes } = require('http-status-codes');
 
 
@@ -51,7 +52,7 @@ const deleteCourse = async (req, res) => {
 
     const updatedCourse = await Course.findById(courseId).deleteOne();
 
-    res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Course deleted successfully'});
+    res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Course deleted successfully' });
 }
 
 
@@ -69,7 +70,9 @@ const enrollStudent = async (req, res) => {
     if (isExistingStudent) {
         throw new BadRequestError('Student is already enrolled to course')
     }
+    const enrollment = new Enrollment({ student: studentId, course: course_id })
     course.students.push(studentId);
+    await enrollment.save();
     await course.save();
 
     res.status(StatusCodes.OK).json({ status: true, code: 200, msg: 'Student enrolled successfully', data: { course } })
@@ -99,7 +102,7 @@ const removeStudent = async (req, res) => {
     }
 
     const course = await Course.findOne({ _id: course_id });
-    
+
     const isExistingStudent = course.students.includes(student_id);
     if (!isExistingStudent) {
         throw new BadRequestError('Student is not enrolled to this course.')
